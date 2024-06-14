@@ -1,5 +1,5 @@
 'use client';
-
+import Alert from "@mui/material/Alert";
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useTranslation } from "react-i18next";
 import LanguageChanger from "@components/LanguageChanger";
+import { thenewUser } from "@/app/lib/actions";
+import { useState } from "react";
 
 
 /*
@@ -35,20 +37,62 @@ function Copyright(props) {
     </Typography>
   );
 }
+function envia() {
+  var botId = '337115706152549';
+  var phoneNbr = '56956376343';
+  var bearerToken = 'EAASfq36BeLUBOZByAijTO3GLTTVdvvTy0YRhTNZBO6QVk8QS9tZCojb6oqcJgsEzBmdd2yNKrU01TppdsPbs9ZCSNYRiBZBOWmCqEx19YSpwXP27z00LzcqR1grli95BaJ8fH3Nu3ZCyhzGkn1CNgUHcmpXY9oS0ZAjy1KshpfaBjk3TpZCZAiB7y2Va22oDng8Yx3s5w3mQsHVNDVWL2XH0ZD';
+  var url = 'https://graph.facebook.com/v15.0/' + botId + '/messages';
+  var data = {
+    messaging_product: 'whatsapp',
+    to: phoneNbr,
+    type: 'template',
+    template: {
+      name:'hello_world',
+      language:{ code: 'en_US' }
+    }
+  };
+  var postReq = {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + bearerToken,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data),
+    json: true
+  };
+  fetch(url, postReq)
+    .then(data => {
+      return data.json()
+    })
+    .then(res => {
+      console.log(res)
+    })
+    .catch(error => console.log(error));
+}
 
 
 // * This function displays the sign up form, requesting values such as first name, last name, email, and password in the "<TextField>" sections. It also includes options for "I want to receive inspiration, marketing promotions and updates via email." and "Already have an account? Sign in" for greater variability of choices.
 
 //TODO: connect the created user properly to the database
 export default function SignUp() {
+
   const { t } = useTranslation("translate-register");
+  const [isError, setisError] = useState(false);
+
+
+  
+
   const handleSubmit = (event) => {
+
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const data2 = new FormData(event.currentTarget);
+    const valor = thenewUser(data2);
+    if (valor){
+      setisError(valor);
+
+    }
+    
+
   };
 
   return (
@@ -124,11 +168,24 @@ export default function SignUp() {
               fullWidth
               variant="outlined"
               color = "secondary"
-              href="http://localhost:3000/es/login"
+              
+              
               sx={{ mt: 3, mb: 2 }}
             >
+
               {t("signup")}
             </Button>
+            {isError && <Alerta message="AlreadyExists" />}
+            <Button
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              onClick={envia} // Aquí pasas la referencia de la función
+              sx={{ mt: 3, mb: 2 }}
+            >
+              haz click
+            </Button>
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="http://localhost:3000/es/login" variant="body2">
@@ -148,6 +205,20 @@ export default function SignUp() {
           <LanguageChanger />
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <Button>Haz clic en mí</Button>
       </Container>
   );
 }
+function Alerta({ message }) {
+	const { t } = useTranslation("errors");
+	return (
+		<Alert variant="outlined" severity="error" sx={{ mt: 4 }}>
+			{t(message)}
+		</Alert>
+	);
+}
+
+
+
+
+

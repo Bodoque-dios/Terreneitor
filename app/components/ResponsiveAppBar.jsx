@@ -96,7 +96,7 @@ function NavbarSettings({ text, locales }) {
 // * This function displays the responsive app bar, which includes a menu icon that opens a menu with the pages of the app, and a title that links to the home page.
 function ResponsiveAppBar() {
 	const { t } = useTranslation("common");
-	const pages = [[t("home"), "/dashboard"], [t("visitors.title"), "/visitors"], [t("delivery"), "/delivery"], [t("settings"), "/settings"]]
+	const pages = [[t("home"), "/dashboard"], [t("visitors.title"), "/visitors"], [t("delivery"), "/delivery"], [t("settings.title"), "/settings"]]
     //TODO: make this dynamic also home should dashboard or something
 
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -113,7 +113,7 @@ function ResponsiveAppBar() {
 		change_language: t("change_language"),
 		logout: t("logout"),
 		profile: t("profile"),
-		settings: t("settings"),
+		settings: t("settings.title"),
 	};
 
 	return (
@@ -170,7 +170,7 @@ function ResponsiveAppBar() {
 						>
 							{pages.map((page) => (
 								<MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Link href={page[1]}>
+                                    <Link href={page[1]} style={{textDecoration: "none"}}>
 									    <Typography textAlign="center" color="text.secondary">{page[0]}</Typography>
                                     </Link>
 								</MenuItem>
@@ -197,9 +197,8 @@ function ResponsiveAppBar() {
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 						{pages.map((page) => (
-                            <Link key={page} href={page[1]}>
+                            <Link key={page} href={page[1]} style={{textDecoration: "none"}}>
 							<Button
-								
 								sx={{ my: 2, color: "white", display: "block" }}
 							>
 								{page[0]}

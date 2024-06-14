@@ -1,8 +1,6 @@
 {
     "dashboard": "Dashboard",
-    "visitors": "Visitas",
     "delivery": "Recepción de Paquetes",
-    "settings": "Ajustes",
     "open_settings": "Abrir ajustes",
     "home": "Inicio",
     "logout": "Cerrar sesión",
@@ -13,10 +11,39 @@
         "name": "Nombre",
         "rut": "RUT",
         "no_visitors": "Visita no registrada",
-        "residence": "Recidencia",
+        "residence": "Residencia",
         "register_visit": "Registrar visita",
         "scan_id": "Escanear Cédula",
         "frequent_visitors": "Visitas frecuentes",
-        "parking_space": "Estacionamiento"
+        "frequent_visitors_description": "añadir nueva visita frecuentes",
+        "parking_space": "Estacionamiento",
+        "new_visitor": "Nueva visita",
+        "first_name": "Nombre",
+        "last_name": "Apellido",
+        "register": "Registrar nueva visita",
+        "register_frequent": "Registrar nueva visita frecuente",
+        "add": "Añadir: {{input}}",
+        "close": "Cerrar",
+        "success": "Visita  frecuente ingresada con éxito",
+        "error": "Error al ingresar visita frecuente",
+        "repeated": "Visita frecuente ya ingresada",
+        "licence_plate": "Patente",
+        "new_vehicle": "Nuevo vehículo",
+        "add_vehicle": "Añadir vehículo",
+        "brand": "Marca",
+        "model": "Modelo",
+        "color": "Color",
+        "visit_reason": "Motivo de visita (opcional)"
+    },
+    "settings":{
+        "title": "Ajustes",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "messaging": {
+            "title": "Mensajería"
+        },
+        "parking":{
+            "title":"Estacionamientos"
+        }
     }
 }
