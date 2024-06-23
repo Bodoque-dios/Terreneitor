@@ -27,14 +27,29 @@
         "success": "Frequent visitor registered successfully",
         "error": "Error registering frequent visitor",
         "repeated": "Frequent visitor already registered",
+        "invalid_rut": "Invalid RUT",
         "licence_plate": "Licence plate",
         "new_vehicle": "New vehicle",
         "add_vehicle": "Add vehicle",
         "brand": "Brand",
         "model": "Model",
         "color": "Color",
-        "visit_reason": "Visit reason (optional)"
+        "visit_reason": "Visit reason (optional)",
+        "visitor_info": "Visitor information",
+        "is_frequent": "{{name}} is a frequent visitor."
     },
+    "resident_visitors": {
+        "welcome": "Visitor Management",
+        "subtitle": "Here you can view and manage the visitors you have received at your residence.",
+        "visitor_history": "Visitor History",
+        "no_visitors": "You have no registered visitors",
+        "authorized_by": "Authorized by {{name}}",
+        "remove": "Remove",
+        "add_frequent": "Add to frequent visitors",
+        "frequent_visitors": "Frequent Visitors",
+        "no_frequent_visitors": "You have no registered frequent visitors",
+        "visiting": "Visited on {{date}} at {{time}}"
+    },    
     "settings":{
         "title": "Settings",
         "cancel": "Cancel",
@@ -43,7 +58,26 @@
             "title": "Messaging"
         },
         "parking":{
-            "title":"Parking"
+            "hours": "Hours",
+            "title":"Parking",
+            "max": "Max parking duration"
         }
+    },
+    "deliverys":{
+        "title":"Delivery Instructions",
+        "general_info": "Please follow these instructions when recieving delivery packages in the building:",
+        "front_desk":"Front Desk",
+        "front_desk_info": "All packages must be dropped off at the front desk. The concierge will log and hold the package until the resident retrieves it.",
+        "resident_notification": "Resident Notification",
+        "resident_notification_info": "The concierge will notify the resident via whatsapp message when recieved.",
+        "pickup": "Pickup Hours",
+        "pickup_info": "Packages can be picked up from the front desk 24/7.",
+        "notification": "Delivery Notification",
+        "notification_info": "Insert the information regarding the package owner to send them a message:",
+        "owner_name": "Adressed name",
+        "name_instruction":"Enter resident name",
+        "owner_apartment":"Apartment number",
+        "apartment_instruction":"Enter apartment number",
+        "button":"submit"
     }
 }

@@ -10,74 +10,100 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { InputAdornment, IconButton } from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
+
 import { authenticate } from "@/app/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import LanguageChanger from "@components/LanguageChanger";
 
-export default function SignIn() {
+import LanguageChanger from "@components/LanguageChanger";
+import ThemeSelector from "@/app/components/ThemeSelector";
+import InteractiveVideo from "@/app/components/InteractiveMode";
+
+export default function SignIn({ children }) {
 	const { t } = useTranslation("translate-login");
 	const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 	const { i18n } = useTranslation(); //TODO: add link for forgot password option
+	const [showPassword, setShowPassword] = useState(false);
+	const [interactiveMode, setInteractiveMode] = useState(false);
 
+	const handleClickShowPassword = () => setShowPassword((show) => !show);
+	const handleMouseDownPassword = (event) => {
+		event.preventDefault();
+	};
 	return (
-		<Container component="main" maxWidth="xs">
-			<Box
-				sx={{
-					marginTop: 8,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<Avatar
-					sx={{
-						m: 1,
-						bgcolor: "secondary.main",
-					}}
-				>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					{t("login")}
-				</Typography>
-
+		<>
+			<Container component="main" maxWidth="xs">
 				<Box
-					component="form"
-					action={dispatch}
-					noValidate
 					sx={{
-						mt: 1,
+						marginTop: 8,
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
 					}}
 				>
-					<TextField
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label={t("email")}
-						name="email"
-						autoComplete="email"
-						autoFocus
-					/>
-					<TextField
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label={t("password")}
-						type="password"
-						id="password"
-						autoComplete="current-password"
-					/>
-					<LoginButton />
-					{errorMessage && <ErrorAlert message={errorMessage} />}
-					<Copyright
+
+					<Avatar
+                        onClick={() => setInteractiveMode((mode) => !mode)}
 						sx={{
-							mt: 8,
-							mb: 4,
+							m: 1,
+							bgcolor: "secondary.main",
 						}}
-					/>
+					>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						{t("login")}
+					</Typography>
+
+					<Box
+						component="form"
+						action={dispatch}
+						noValidate
+						sx={{
+							mt: 1,
+						}}
+					>
+						<TextField
+							margin="normal"
+							required
+							fullWidth
+							id="email"
+							label={t("email")}
+							name="email"
+							autoComplete="email"
+							autoFocus
+						/>
+						<TextField
+							margin="normal"
+							required
+							fullWidth
+							name="password"
+							label={t("password")}
+							type={showPassword ? "text" : "password"}
+							id="password"
+							autoComplete="current-password"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											aria-label="toggle password visibility"
+											onClick={handleClickShowPassword}
+											onMouseDown={handleMouseDownPassword}
+											edge="end"
+										>
+											{showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
+						/>
+						{errorMessage && <ErrorAlert message={errorMessage} />}
+						<LoginButton />
+					</Box>
+					{children}
 					<Grid container>
 						<Grid item xs>
 							{/* change the url to dynamic ones */}
@@ -94,16 +120,33 @@ export default function SignIn() {
 							</Link>
 						</Grid>
 					</Grid>
+					<Box
+						sx={{
+							my: 3,
+							display: "flex",
+							justifyContent: "space-between",
+							width: "100%",
+						}}
+					>
+						<LanguageChanger noMargin />
+						<ThemeSelector noMargin />
+					</Box>
 				</Box>
-				<Box
+				<Copyright
 					sx={{
-						my: 5,
+						mt: 8,
+						mb: 4,
 					}}
-				>
-					<LanguageChanger />
-				</Box>
-			</Box>
-		</Container>
+				/>
+			</Container>
+  
+			{interactiveMode && (
+				<>
+					<InteractiveVideo videoId={"zZ7AimPACzc"} />
+					<InteractiveVideo videoId={"7yl7Wc1dtWc"} shouldSetRight />
+				</>
+			)}
+		</>
 	);
 }
 
@@ -133,7 +176,7 @@ function LoginButton() {
 			type="submit"
 			fullWidth
 			variant="outlined"
-			color="secondary"
+			color="primary"
 			sx={{ mt: 3, mb: 2 }}
 			aria-disabled={pending}
 		>

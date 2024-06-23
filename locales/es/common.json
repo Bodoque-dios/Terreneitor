@@ -15,7 +15,7 @@
         "register_visit": "Registrar visita",
         "scan_id": "Escanear Cédula",
         "frequent_visitors": "Visitas frecuentes",
-        "frequent_visitors_description": "añadir nueva visita frecuentes",
+        "frequent_visitors_description": "añadir nueva visita frecuente",
         "parking_space": "Estacionamiento",
         "new_visitor": "Nueva visita",
         "first_name": "Nombre",
@@ -27,13 +27,28 @@
         "success": "Visita  frecuente ingresada con éxito",
         "error": "Error al ingresar visita frecuente",
         "repeated": "Visita frecuente ya ingresada",
+        "invalid_rut": "RUT Inválido",
         "licence_plate": "Patente",
         "new_vehicle": "Nuevo vehículo",
         "add_vehicle": "Añadir vehículo",
         "brand": "Marca",
         "model": "Modelo",
         "color": "Color",
-        "visit_reason": "Motivo de visita (opcional)"
+        "visit_reason": "Motivo de visita (opcional)",
+        "visitor_info": "Información del visitante",
+        "is_frequent": "{{name}} es una visita frecuente."
+    },
+    "resident_visitors":{
+        "welcome": "Gestión de Visitas",
+        "subtitle": "Aquí puedes ver y gestionar las visitas que has recibido en tu residencia.",
+        "visitor_history": "Historial de Visitas",
+        "no_visitors": "No tienes visitas registradas",
+        "authorized_by": "Autorizado por {{name}}",
+        "remove": "Eliminar",
+        "add_frequent": "Añadir a visita frecuente",
+        "frequent_visitors": "Visitas frecuentes",
+        "no_frequent_visitors": "No tienes visitas frecuentes registradas",
+        "visiting": "Visitó el {{date}} a las  {{time}}"
     },
     "settings":{
         "title": "Ajustes",
@@ -43,7 +58,26 @@
             "title": "Mensajería"
         },
         "parking":{
-            "title":"Estacionamientos"
+            "hours": "Horas",
+            "title":"Estacionamientos",
+            "max": "Duración máxima de estacionamiento"
         }
-    }
+    },
+    "deliverys":{
+        "title":"Instrucciones de Entrega",
+        "general_info": "Por favor, siga estas instrucciones al recibir paquetes en el edificio:",
+        "front_desk":"Recepción",
+        "front_desk_info": "Todos los paquetes deben ser entregados en la recepción. El conserje registrará y guardará el paquete hasta que el residente lo recoja.",
+        "resident_notification": "Notificación al Residente",
+        "resident_notification_info": "El conserje notificará al residente a través de un mensaje de WhatsApp cuando lo reciba.",
+        "pickup": "Horario de Retiro",
+        "pickup_info": "Los paquetes se pueden retirar en la recepción las 24 horas del día, los 7 días de la semana.",
+        "notification": "Notificación de Entrega",
+        "notification_info": "Inserte la información del propietario del paquete para mandarle un mensaje:",
+        "owner_name": "Nombre del destinatario",
+        "name_instruction":"Ingrese el nombre del residente",
+        "owner_apartment":"Número de departamento",
+        "apartment_instruction":"Ingrese el número de departamento",
+        "button":"enviar"
+        }
 }

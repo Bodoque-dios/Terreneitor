@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,23 +10,23 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
+import { Settings } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import LanguageChanger from "./LanguageChanger";
 
 import { useTranslation } from "react-i18next";
-import {Settings } from "@mui/icons-material";
 
 import { LogOut } from "../lib/actions";
 import Link from "next/link";
-
+import ThemeSelector from "./ThemeSelector";
 
 // * This function displays the settings menu, which includes options for the user to view their profile, change the language, and log out.
-function NavbarSettings({ text, locales }) {
-	const [anchorElUser, setAnchorElUser] = React.useState(null);
+function NavbarSettings({ text }) {
+	const [anchorElUser, setAnchorElUser] = useState(null);
 
 	const handleOpenUserMenu = (event) => {
 		setAnchorElUser(event.currentTarget);
@@ -39,8 +39,6 @@ function NavbarSettings({ text, locales }) {
 	return (
 		<Box sx={{ flexGrow: 0 }}>
 			<Tooltip title={text.settings}>
-				{/* TODO: maybe change for a gear or put a menu with things*/}
-
 				<Settings
 					fontSize="medium"
 					sx={{ ml: 1 }}
@@ -72,10 +70,11 @@ function NavbarSettings({ text, locales }) {
 				<MenuItem onClick={handleCloseUserMenu}>
 					<LanguageChanger />
 				</MenuItem>
-				{/* TODO: add a dark/light mode selector */}
+				<MenuItem>
+					<ThemeSelector />
+				</MenuItem>
 				{/* TODO: remove weird red border when selected */}
 				<MenuItem onClick={handleCloseUserMenu}>
-					
 					<form
 						action={async () => {
 							await LogOut({ redirectTo: "/login" });
@@ -92,14 +91,25 @@ function NavbarSettings({ text, locales }) {
 	);
 }
 
-
 // * This function displays the responsive app bar, which includes a menu icon that opens a menu with the pages of the app, and a title that links to the home page.
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ role, community }) {
 	const { t } = useTranslation("common");
-	const pages = [[t("home"), "/dashboard"], [t("visitors.title"), "/visitors"], [t("delivery"), "/delivery"], [t("settings.title"), "/settings"]]
-    //TODO: make this dynamic also home should dashboard or something
+	const pages = [
+		[t("home"), "/dashboard"],
+		[t("visitors.title"), "/visitors"],
+		[t("delivery"), "/delivery"],
+	];
 
-	const [anchorElNav, setAnchorElNav] = React.useState(null);
+	if (role === "admin" || role === "concierge") {
+        pages.push([t("settings.parking.title"), "/parking"]);
+	}
+
+    //Only admins can access the settings page
+    if (role === "admin") {
+		pages.push([t("settings.title"), "/settings"]);
+    }
+
+	const [anchorElNav, setAnchorElNav] = useState(null);
 
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
@@ -120,24 +130,41 @@ function ResponsiveAppBar() {
 		<AppBar position="static" color="transparent">
 			<Container maxWidth="xl">
 				<Toolbar disableGutters>
-					<AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-					<Typography
-						variant="h6"
-						noWrap
-						component="a"
-						href="#app-bar-with-responsive-menu" // TODO: change href
-						sx={{
-							mr: 2,
-							display: { xs: "none", md: "flex" },
-							fontFamily: "monospace",
-							fontWeight: 700,
-							letterSpacing: ".3rem",
-							color: "inherit",
-							textDecoration: "none",
-						}}
-					>
-						TERRENEITOR
-					</Typography>
+					<Box>
+						<Typography
+							variant="h6"
+							noWrap
+							component="a"
+							href="/dashboard"
+							color="primary"
+							sx={{
+								display: { xs: "none", md: "flex" },
+								fontFamily: "monospace",
+								fontWeight: 700,
+								letterSpacing: ".3rem",
+								textDecoration: "none",
+							}}
+						>
+							TERRENEITOR
+						</Typography>
+						<Typography
+							color="secondary"
+							fontSize={12}
+							alignSelf={"flex-end"}
+							justifySelf={"end"}
+							fontWeight={700}
+							display={{ xs: "none", md: "flex" }}
+						>
+							{community}
+						</Typography>
+					</Box>
+
+					<Divider
+						orientation="vertical"
+						variant="middle"
+						flexItem
+						sx={{ ml: 2, my: 2, display: { xs: "none", md: "flex" } }}
+					/>
 
 					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
 						<IconButton
@@ -170,9 +197,11 @@ function ResponsiveAppBar() {
 						>
 							{pages.map((page) => (
 								<MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Link href={page[1]} style={{textDecoration: "none"}}>
-									    <Typography textAlign="center" color="text.secondary">{page[0]}</Typography>
-                                    </Link>
+									<Link href={page[1]} style={{ textDecoration: "none" }}>
+										<Typography textAlign="center" color="text.secondary">
+											{page[0]}
+										</Typography>
+									</Link>
 								</MenuItem>
 							))}
 						</Menu>
@@ -181,7 +210,8 @@ function ResponsiveAppBar() {
 						variant="h5"
 						noWrap
 						component="a"
-						href="#app-bar-with-responsive-menu" // TODO: change href
+						href="/dashboard"
+						color="primary"
 						sx={{
 							mr: 2,
 							display: { xs: "flex", md: "none" },
@@ -189,7 +219,6 @@ function ResponsiveAppBar() {
 							fontFamily: "monospace",
 							fontWeight: 700,
 							letterSpacing: ".3rem",
-							color: "inherit",
 							textDecoration: "none",
 						}}
 					>
@@ -197,13 +226,21 @@ function ResponsiveAppBar() {
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 						{pages.map((page) => (
-                            <Link key={page} href={page[1]} style={{textDecoration: "none"}}>
-							<Button
-								sx={{ my: 2, color: "white", display: "block" }}
+							<Link
+								key={page}
+								href={page[1]}
+								style={{ textDecoration: "none" }}
 							>
-								{page[0]}
-							</Button>
-                            </Link>
+								<Button
+									sx={{
+										my: 2,
+										color: "primary.contrastText",
+										display: "block",
+									}}
+								>
+									{page[0]}
+								</Button>
+							</Link>
 						))}
 					</Box>
 
