@@ -36,7 +36,11 @@
         "color": "Color",
         "visit_reason": "Visit reason (optional)",
         "visitor_info": "Visitor information",
-        "is_frequent": "{{name}} is a frequent visitor."
+        "is_frequent": "{{name}} is a frequent visitor.",
+        "error_missing_parking_space": "Error: Missing parking space",
+        "error_missing_license_plate": "Error: Missing license plate",
+        "error_adding_visitor": "Error adding visitor",
+        "no_parking_space": "No parking space available"
     },
     "resident_visitors": {
         "welcome": "Visitor Management",
@@ -79,5 +83,11 @@
         "owner_apartment":"Apartment number",
         "apartment_instruction":"Enter apartment number",
         "button":"submit"
+    },
+    "resident_delivery": {
+        "welcome": " Welcome to the package delivery handler",
+        "subtitle": "Administer pending packages or review historic packaging information of your residence.",
+        "pending_packages": "Ready to retrieve"
     }
+    
 }

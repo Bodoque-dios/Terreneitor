@@ -36,7 +36,11 @@
         "color": "Color",
         "visit_reason": "Motivo de visita (opcional)",
         "visitor_info": "Información del visitante",
-        "is_frequent": "{{name}} es una visita frecuente."
+        "is_frequent": "{{name}} es una visita frecuente.",
+        "error_missing_parking_space": "Error: Estacionamiento no seleccionado",
+        "error_missing_license_plate": "Error: Patente no ingresada",
+        "error_adding_visitor": "Error al ingresar visita",
+        "no_parking_space": "No hay estacionamientos disponibles"
     },
     "resident_visitors":{
         "welcome": "Gestión de Visitas",
@@ -79,5 +83,10 @@
         "owner_apartment":"Número de departamento",
         "apartment_instruction":"Ingrese el número de departamento",
         "button":"enviar"
-        }
+        },
+        "resident_delivery": {
+        "welcome": " Bienvenido a la página de manejo de paquetes",
+        "subtitle": "Administra ygestiona los paquetes pendientes o revisa la información de paquetes histórica de tu residencia.",
+        "pending_packages": "Listo para su retiro"
+    }
 }
