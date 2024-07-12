@@ -314,3 +314,68 @@ export async function updateSettings(prevState, formData) {
 	}
 	console.log("Settings updated");
 }
+
+
+export async function updateTime(date, time, id) {
+
+	const now = new Date();
+	const updatedtime = new Date(`${date} ${time}`);
+	const visitor_id = id;
+
+	if (updatedtime<now){
+		return "error_time";
+	}
+	try {
+		await sql`UPDATE visit_to_residence SET departure = ${updatedtime} WHERE visitor_id = ${visitor_id}`;
+	} catch (error) {
+		return "error_updating_settings";
+	}
+}
+
+export async function addParkingVisit(prevState, formData) {
+	const residence_id = formData.get("residence_id");
+	const visitor_id = formData.get("visitor_id");
+	const reason = formData.get("visit_reason");
+	const date = formData.get("departure_date");
+	const time = formData.get("departure_time");
+
+	const departureDateTime = new Date(`${date} ${time}`);
+
+	const license_plate = formData.get("vehicle_id");
+	const parking_space_id = formData.get("parking_space_id");
+
+	// only allow to set a vehicle if the parking space is set and viceversa
+	if (license_plate && !parking_space_id) {
+		return "error_missing_parking_space";
+	}
+	if (parking_space_id && !license_plate) {
+		return "error_missing_license_plate";
+	}
+	try {
+		const visit_id = await sql`
+            INSERT INTO visit_to_residence (residence_id,visitor_id,arrival, departure, reason)
+            VALUES (${residence_id}, ${visitor_id},current_timestamp AT TIME ZONE 'America/Santiago', ${departureDateTime}, ${reason})
+            RETURNING id;`;
+
+		if (license_plate && parking_space_id) {
+			await sql`INSERT INTO parking_space_usage (parking_space_id, vehicle_id, visit_id)
+            VALUES (${parking_space_id}, ${license_plate}, ${visit_id.rows[0].id})`;
+		}
+	} catch (error) {
+		return "error_adding_visit";
+	}
+	return true;
+}
+
+
+//functions to the parking spaces
+export async function setVisitToResidenceNull(visitorId,id) {
+	try {
+	  await sql`UPDATE visit_to_residence SET departure = NULL WHERE visitor_id = ${visitorId}`;
+
+	  await sql`DELETE FROM parking_space_usage WHERE parking_space_id = ${id}`;
+	  
+	} catch (error) {
+	  console.error(`Error setting visit_to_residence to NULL: ${error}`);
+	}
+  }

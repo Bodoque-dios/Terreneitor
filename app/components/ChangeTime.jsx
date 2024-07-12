@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled } from '@mui/material/styles';
+import { useState } from "react";
+import { updateTime } from '@/app/lib/actions';
+import { useFormState } from "react-dom";
 
 const PopoverContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
@@ -18,21 +21,17 @@ const Grid = styled('div')({
   gap: '16px',
 });
 
-const GridRow = styled('div')({
-  display: 'grid',
-  gridTemplateColumns: '1fr 2fr',
-  alignItems: 'center',
-  gap: '16px',
-});
 
 const ButtonContainer = styled('div')({
   display: 'flex',
-  justifyContent: 'flex-end',
   gap: '8px',
 });
 
-export default function SpotConfigPopover() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function SpotConfigPopover({data}) {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const [errorMessageVisit, dispatchUpdate] = useFormState(updateTime, undefined);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -43,6 +42,39 @@ export default function SpotConfigPopover() {
   };
 
   const open = Boolean(anchorEl);
+
+
+  const [selectedDate, setSelectedDate] = useState('');
+
+	const handleDateChange = (event) => {
+	  setSelectedDate(event.target.value);
+	};
+
+	
+  const handleSave = (event) => {
+    event.preventDefault();
+
+    handleClose();
+
+    updateTime(selectedDate, selectedTime,data)
+
+    setTimeout(() => {
+			//we reload the page to update the visitors list using plain js
+			window.location.reload();
+		}, 3000);
+
+
+  };
+
+
+
+	  //Now, to select the time use the following code
+	  const [selectedTime, setSelectedTime] = useState('');
+
+	  const handleTimeChange = (event) => {
+		setSelectedTime(event.target.value);
+	  };
+	
 
   return (
     <div>
@@ -55,43 +87,57 @@ export default function SpotConfigPopover() {
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
         }}
       >
         <PopoverContent>
-          <Grid>
-            <div>
+          <Grid container spacing={2}> 
+        <form onSubmit={handleSave}>
+          
+            <Grid item xs={12} style={{ marginBottom: '20px' }}>
               <Typography variant="h6">Configuración</Typography>
               <Typography variant="body2" color="textSecondary">
                 Ingrese cuanto tiempo más se quedará el vehículo en el estacionamiento
               </Typography>
-            </div>
-            <div>
-              <GridRow>
-              <TextField id="days" variant="outlined" size="small" />
+            </Grid>
 
-                <Typography>Días</Typography>
-                <TextField id="hours" variant="outlined" size="small" />
-
-                <Typography>Días</Typography>
-                 <TextField id="minutes" variant="outlined" size="small" />
-                <Typography>Minutos</Typography>
-
-              </GridRow>
-
-            </div>
-            <ButtonContainer>
-              <Button variant="outlined" size="small" onClick={handleClose}>
-                Cancelar
-              </Button>
-              <Button variant="contained" size="small" color="primary">
-                Actualizar
-              </Button>
-            </ButtonContainer>
+            <Grid item xs={12} style={{ marginBottom: '20px' }}>
+              <TextField
+                id="date"
+                name="date"
+                label="Select Date"
+                type="date"
+                onChange={handleDateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} style={{ marginBottom: '20px' }}>
+              <TextField
+                id="time"
+                name="time"
+                label="Select Time"
+                type="time"
+                onChange={handleTimeChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ButtonContainer>
+                <Button variant="outlined" size="small" onClick={handleClose}>
+                  Cancelar
+                </Button>
+                <Button variant="contained" size="small" color="primary" type="submit">
+                  Actualizar
+                </Button>
+              </ButtonContainer>
+            </Grid>
+          </form>
           </Grid>
         </PopoverContent>
       </Popover>
