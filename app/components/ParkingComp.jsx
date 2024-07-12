@@ -18,7 +18,8 @@ import { useTranslation } from "react-i18next";
 import QrReader from "@/app/components/QrReader";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 import { useFormState } from "react-dom";
-import { addVisitor, addVisitorVehicle, addVisit } from "@/app/lib/actions";
+import { addVisitor, addVisitorVehicle, addParkingVisit } from "@/app/lib/actions";
+
 
 const style = {
 	position: "absolute",
@@ -37,7 +38,7 @@ function success() {
 }
 const filter = createFilterOptions();
 
-export const VisitorComp = ({
+export const ParkingComp = ({
 	visitorsRut,
 	visitorsName,
 	residences,
@@ -45,7 +46,10 @@ export const VisitorComp = ({
 	frequentVisitors,
 	availableParkingSpaces,
 }) => {
-	const { t } = useTranslation("common", { keyPrefix: "visitors" });
+    const { t } = useTranslation("common", {
+		keyPrefix: "new_visitor_parking",
+	});
+
 	//Autocomplete values
 	const [rut, setRut] = useState("");
 	const [name, setName] = useState("");
@@ -83,25 +87,8 @@ export const VisitorComp = ({
 		addVisitorVehicle,
 		undefined,
 	);
-	const [errorMessageVisit, dispatchVisit] = useFormState(addVisit, undefined);
+	const [errorMessageVisit, dispatchVisit] = useFormState(addParkingVisit, undefined);
 
-	const handleRead = (result) => {
-		const urlObj = new URL(result.data);
-		const run = urlObj.searchParams.get("RUN");
-		const userid = visitorsRut.find((visitor) => visitor.label === run)?.id;
-		if (userid) {
-			setRut(run);
-			setName(visitorsName.find((visitor) => visitor.id === userid).label);
-		} else {
-			setNewVisitorModal(true);
-			setNewVisitor({
-				rut: run,
-				firstName: "",
-				lastName: "",
-			});
-		}
-		handleClose();
-	};
 
 	const handleSubmitVisitor = () => {
 		setTimeout(() => {
@@ -119,11 +106,35 @@ export const VisitorComp = ({
 		setSelectedParkingSpace(value);
 	};
 
+
+	//To select the date use the following code
+	const [selectedDate, setSelectedDate] = useState('');
+
+	const handleDateChange = (event) => {
+	  setSelectedDate(event.target.value);
+	};
+
+	
+	  const handleSave = () => {
+		// Simulate saving the date (e.g., sending it to a server)
+		console.log('Saved Date:', selectedDate);
+		alert(`Saved Date: ${selectedDate}`);
+	  };
+	  
+
+
+	  //Now, to select the time use the following code
+	  const [selectedTime, setSelectedTime] = useState('');
+
+	  const handleTimeChange = (event) => {
+		setSelectedTime(event.target.value);
+	  };
+	
 	return (
 		<>
 			<Grid xs={12}>
 				<Typography variant="h3" color="primary" align="center">
-					{t("title")}
+                    {t("title")}
 				</Typography>
 				{errorMessageVehicle && (
 					<Alert severity="error">{errorMessageVehicle}</Alert>
@@ -346,29 +357,10 @@ export const VisitorComp = ({
 									</Grid>
 
 									<Grid xs={12} md={6}>
-										<TextField label={t("resident_name")} fullWidth></TextField>
+										<TextField fullWidth></TextField>
 									</Grid>
 									<Grid xs={12}>
-										<Accordion
-											sx={{
-												width: 1,
-												borderRadius: 2,
-												backgroundColor: "transparent",
-												border: "none",
-												"&::before": {
-													display: "none",
-												},
-											}}
-										>
-											<AccordionSummary
-												expandIcon={<ArrowDownwardIcon />}
-												aria-controls="panel1-content"
-												id="panel1-header"
-											>
-												<Typography>Parking</Typography>
-											</AccordionSummary>
-											<AccordionDetails>
-												{availableParkingSpaces.length === 0 ? (
+									{availableParkingSpaces.length === 0 ? (
 													<Typography variant="body1" textAlign="center" color="textSecondary">
 														{t("no_parking_space")}
 													</Typography>
@@ -465,8 +457,7 @@ export const VisitorComp = ({
 														</Grid>
 													</Grid>
 												)}
-											</AccordionDetails>
-										</Accordion>
+
 									</Grid>
 									{frequentVisitor && (
 										<>
@@ -480,6 +471,29 @@ export const VisitorComp = ({
 										</>
 									)}
 									<Grid xs={12}>
+      <TextField
+		id="departure_date"
+		name="departure_date"
+        label={t("select_date")}
+        type="date"
+        onChange={handleDateChange}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+	   <TextField
+	    id="departure_time"
+		name="departure_time"
+        label={t("select_time")}
+        type="time"
+        onChange={handleTimeChange}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+									</Grid>
+									
+									<Grid xs={12}>
 										<TextField
 											id="visit_reason"
 											name="visit_reason"
@@ -489,6 +503,7 @@ export const VisitorComp = ({
 											sx={{ mt: 1, width: 1 }}
 										></TextField>
 									</Grid>
+
 									<Grid
 										xs={12}
 										sx={{
@@ -513,180 +528,10 @@ export const VisitorComp = ({
 							</>
 						)}
 					</Grid>
+					
 				</Grid>
 			</Grid>
-			<Grid xs={12}>
-				<Button
-					variant="outlined"
-					color="secondary"
-					onClick={handleOpen}
-					sx={{
-						width: "100%",
-						textAlign: "center",
-						border: "1px solid",
-						p: 2,
-					}}
-				>
-					<Typography variant="h4" fontWeight={500}>
-						{t("scan_id")}
-					</Typography>
-				</Button>
-				<Modal
-					open={newVisitorModal}
-					onClose={closeNewVisitorModal}
-					aria-labelledby="modal-modal2-title"
-					aria-describedby="modal-modal2-description"
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
-				>
-					<Box component="form" action={dispatch} sx={style} noValidate>
-						<Typography variant="h4" color="primary" align="center">
-							{t("new_visitor")}
-						</Typography>
-						<TextField
-							label={t("first_name")}
-							value={newVisitor.firstName}
-							onChange={(e) =>
-								setNewVisitor({ ...newVisitor, firstName: e.target.value })
-							}
-							id="firstName"
-							name="firstName"
-							sx={{ mt: 2, width: 1 }}
-						/>
-						<TextField
-							label={t("last_name")}
-							value={newVisitor.lastName}
-							onChange={(e) =>
-								setNewVisitor({ ...newVisitor, lastName: e.target.value })
-							}
-							id="lastName"
-							name="lastName"
-							sx={{ mt: 2, width: 1 }}
-						/>
-						<TextField
-							label={t("rut")}
-							value={newVisitor.rut}
-							onChange={(e) =>
-								setNewVisitor({ ...newVisitor, rut: e.target.value })
-							}
-							id="rut"
-							name="rut"
-							sx={{ mt: 2, width: 1 }}
-						/>
-						<Button
-							variant="outlined"
-							color="secondary"
-							type="submit"
-							sx={{
-								mt: 2,
-								width: "100%",
-							}}
-							onClick={success}
-						>
-							{t("register")}
-						</Button>
-					</Box>
-				</Modal>
-				<Modal
-					open={open}
-					onClose={handleClose}
-					aria-labelledby="modal-modal-title"
-					aria-describedby="modal-modal-description"
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
-				>
-					<Box sx={style}>
-						<QrReader handleRead={handleRead} />
-					</Box>
-				</Modal>
-				<Modal
-					open={openLicenseModal}
-					onClose={handleCloseLicense}
-					aria-labelledby="modal-modal-title"
-					aria-describedby="modal-modal-description"
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
-				>
-					<Box sx={style} component="form" action={dispatchVehicle}>
-						<Typography variant="h4" color="primary" align="center">
-							{t("new_vehicle")}
-						</Typography>
-						<input
-							type="hidden"
-							name="visitor_id"
-							value={visitorVehicle?.visitor_id}
-						/>
-						<TextField
-							name="license_plate"
-							label={t("licence_plate")}
-							value={visitorVehicle?.license_plate}
-							onChange={(e) =>
-								setVisitorVehicle({
-									...visitorVehicle,
-									license_plate: e.target.value,
-								})
-							}
-							sx={{ mt: 2, width: 1 }}
-							InputLabelProps={{ color: "secondary" }}
-							required
-						/>
-						<TextField
-							name="brand"
-							label={t("brand")}
-							value={visitorVehicle?.brand}
-							onChange={(e) =>
-								setVisitorVehicle({ ...visitorVehicle, brand: e.target.value })
-							}
-							sx={{ mt: 2, width: 1 }}
-							InputLabelProps={{ color: "secondary" }}
-							required
-						/>
-						<TextField
-							name="model"
-							label={t("model")}
-							value={visitorVehicle?.model}
-							onChange={(e) =>
-								setVisitorVehicle({ ...visitorVehicle, model: e.target.value })
-							}
-							sx={{ mt: 2, width: 1 }}
-							InputLabelProps={{ color: "secondary" }}
-							required
-						/>
-						<TextField
-							name="color"
-							label={t("color")}
-							value={visitorVehicle?.color}
-							onChange={(e) =>
-								setVisitorVehicle({ ...visitorVehicle, color: e.target.value })
-							}
-							sx={{ mt: 2, width: 1 }}
-							InputLabelProps={{ color: "secondary" }}
-							required
-						/>
-						<Button
-							type="submit"
-							variant="outlined"
-							color="secondary"
-							onClick={handleCloseLicense}
-							sx={{
-								mt: 2,
-								width: "100%",
-							}}
-						>
-							{t("add_vehicle")}
-						</Button>
-					</Box>
-				</Modal>
-			</Grid>
+			
 		</>
 	);
 };

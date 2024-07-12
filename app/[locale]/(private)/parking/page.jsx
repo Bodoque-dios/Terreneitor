@@ -5,8 +5,11 @@ import { logger } from "@/logger";
 import { Parking_Component } from "./parkingcomponent"; // Correct the import
 
 export default async function Parking() {
+;
 	const session = await auth();
-
+	if (!session) {
+		redirect("/login");
+	}
 	let user_community_id;
 	let parking_DB;
 	let db_parking_space;
@@ -24,7 +27,7 @@ export default async function Parking() {
 	//then, make a database of all the parking spaces from the community of the user
 	try {
 		parking_DB =
-			await sql`SELECT parking_space.id, parking_space.number, visitor_vehicle.brand, visitor_vehicle.model, visitor.firstname, visitor.lastname, user_info.firstname as resident_firstname, parking_space_usage.id as parking_used_id, user_info.lastname as resident_lastname, visit_to_residence.arrival as llegada, visit_to_residence.departure as salida
+			await sql`SELECT visitor.id as the_visitor_id, parking_space.id, parking_space.number, visitor_vehicle.brand, visitor_vehicle.model, visitor.firstname, visitor.lastname, user_info.firstname as resident_firstname, parking_space_usage.id as parking_used_id, user_info.lastname as resident_lastname, visit_to_residence.arrival as llegada, visit_to_residence.departure as salida
                              FROM parking_space 
 							LEFT JOIN parking_space_usage ON parking_space.id = parking_space_usage.parking_space_id 
                             LEFT JOIN visitor_vehicle ON parking_space_usage.vehicle_id = visitor_vehicle.id 
@@ -35,7 +38,7 @@ export default async function Parking() {
                             LEFT JOIN user_info ON resident.user_id = user_info.id
 
 
-                            WHERE parking_space.community_id = ${user_community_id}`;
+                            WHERE parking_space.community_id = ${session.user.community_id}`;
 		parking_DB = parking_DB.rows;
 	} catch (error) {
 		user_community_id = [];
@@ -56,14 +59,14 @@ export default async function Parking() {
 
 	try {
 		ocupied_spaces =
-			await sql`SELECT * FROM parking_space_usage INNER JOIN parking_space ON parking_space_usage.parking_space_id = parking_space.id WHERE community_id = ${user_community_id}`;
+			await sql`SELECT * FROM parking_space_usage INNER JOIN parking_space ON parking_space_usage.parking_space_id = parking_space.id WHERE community_id = ${session.user.community_id}`;
 		ocupied_spaces = ocupied_spaces.rows.length;
 	} catch (error) {
 		ocupied_spaces = [];
 	}
 
 	logger.info(
-		`User with community_id '${user_community_id}' has opened the parking page.`,
+		`User with community_id '${session.user.community_id}' has opened the parking page.`,
 	);
 
 	return (

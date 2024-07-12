@@ -40,7 +40,8 @@
         "error_missing_parking_space": "Error: Missing parking space",
         "error_missing_license_plate": "Error: Missing license plate",
         "error_adding_visitor": "Error adding visitor",
-        "no_parking_space": "No parking space available"
+        "no_parking_space": "No parking space available",
+        "resident_name": "Resident name"
     },
     "resident_visitors": {
         "welcome": "Visitor Management",
@@ -93,6 +94,80 @@
         "role": " Role",
         "residence": "Residence",
         "phone": "Phone number"
+    },
+    "parking_view": {
+        "title": "Parking Management",
+        "view_all": "All",
+        "view_available": "Available",
+        "view_occupied": "Occupied",
+        "sort": "Sort By:",
+        "sort_1": "Number",
+        "sort_2": "Status",
+        "available_parking": "Available:",
+        "occupied_parking": "Occupied:",
+        "all_parking": "Total:",
+        "number_column": "Number",
+        "visitor_column": "Visitor",
+        "car_column": "Vehicle",
+        "state_column": "Status",
+        "departure_column": "Departure",
+        "action_column": "Action",
+        "action_reserve": "Mark as Occupied",
+        "action_reserve_cancel": "Cancel",
+        "action_reserve_add": "Add Visit",
+        "action_remove": "Mark as Available",
+        "action_remove_cancel": "Cancel",
+        "action_remove_action": "Free Space"
+
+    },
+    "parking_configuration_view": {
+        "title": "Settings",
+        "description": "Enter the new date until which the visitor's vehicle will remain",
+        "cancel": "Cancel",
+        "update": "Update"    
+
+    },
+    
+    "new_visitor_parking": {
+        "title": "Visitors",
+        "name": "Name",
+        "rut": "RUT",
+        "no_visitors": "Visitor not registered",
+        "residence": "Residence",
+        "register_visit": "Register visit",
+        "scan_id": "Scan ID",
+        "frequent_visitors": "Frequent visitors",
+        "frequent_visitors_description": "add a new frequent visitor",
+        "parking_space": "Parking space",
+        "new_visitor": "New Visitor",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "register": "Register New Visitor",
+        "register_frequent": "Register New Frequent Visitor",
+        "add": "Add: {{input}}",
+        "close": "close",
+        "success": "Frequent visitor registered successfully",
+        "error": "Error registering frequent visitor",
+        "repeated": "Frequent visitor already registered",
+        "invalid_rut": "Invalid RUT",
+        "licence_plate": "Licence plate",
+        "new_vehicle": "New vehicle",
+        "add_vehicle": "Add vehicle",
+        "brand": "Brand",
+        "model": "Model",
+        "color": "Color",
+        "visit_reason": "Visit reason (optional)",
+        "visitor_info": "Visitor information",
+        "is_frequent": "{{name}} is a frequent visitor.",
+        "error_missing_parking_space": "Error: Missing parking space",
+        "error_missing_license_plate": "Error: Missing license plate",
+        "error_adding_visitor": "Error adding visitor",
+        "no_parking_space": "No parking space available",
+        "resident_name": "Resident name",
+          "select_date": "Select Date",
+        "select_time": "Time"
+        
     }
+    
     
 }
