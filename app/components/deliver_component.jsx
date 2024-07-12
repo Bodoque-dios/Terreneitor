@@ -18,11 +18,9 @@ const filter = createFilterOptions();
 export const Deliverycomponent = ({ residentName = [],}) => {
   const { t } = useTranslation("common", { keyPrefix: "deliverys" });
 
-  const [resident_Name, setResidentName] = useState("");
-  const [resident_Address, setResidentAddress] = useState("");
-  const [openName, setOpenName] = useState(false);
+  const [selectedResident, setSelectedResident] = useState(null);
   const [openAddress, setOpenAddress] = useState(false);
-
+  const [residentAddress, setResidentAddress] = useState("");
   const [resident, setResident] = useState({
     user_id: "",
     firstname: "",
@@ -31,16 +29,40 @@ export const Deliverycomponent = ({ residentName = [],}) => {
     community_address: "",
     cellphone: "",
   });
+  
+  const handleNameChange = (event, value) => {
+    if (value) {
+      setSelectedResident(value);
+      setResidentAddress(value.address);
+      setResident({
+        user_id: value.id,
+        firstname: value.label.split(' ')[0],
+        lastname: value.label.split(' ')[1],
+        residence_id: value.residence_id,
+        community_address: value.address,
+        cellphone: value.cellphone,
+      });
+    } else {
+      setSelectedResident(null);
+      setResidentAddress("");
+      setResident({
+        user_id: "",
+        firstname: "",
+        lastname: "",
+        residence_id: "",
+        community_address: "",
+        cellphone: "",
+      });
+    }
+    setOpenAddress(value?.length > 0);
+  };
 
   const handleAddPackage = async () => {
     const sender = "Amazon"; // Example sender
     const description = "Package from Amazon"; // Example description
     await addPackage(resident, sender, description);
   };
-
   
-  
- 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Box component="main" flex="1" py={12} px={6}>
@@ -88,163 +110,86 @@ export const Deliverycomponent = ({ residentName = [],}) => {
                 {t("notification_info")}
               </Typography>
               <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Autocomplete
-                  id="residentName"
-                  name="residentName"
-                  sx={{ mt: 2, width: 1 }}
-                  disablePortal
-                  freeSolo
-                  forcePopupIcon={false}
-                  noOptionsText={t("name_instruction")}
-                  value={resident_Name}
-                  open={openName}
-                  onClose={() => setOpenName(false)}
-                  options={residentName}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={t("owner_name")}
-                      inputProps={{ ...params.inputProps,name: "residentName" }}
-                      id="name"
-                      placeholder={t("name_instruction")}
-                      InputLabelProps={{ color: "secondary" }}
-                      fullWidth
-                    />
+                 <Autocomplete
+                   id="name"
+                   name="residentName"
+                   sx={{ mt: 2, width: 1 }}
+                   disablePortal
+                   freeSolo
+                   forcePopupIcon={false}
+                   noOptionsText="No options"
+                   options={residentName}
+                   renderInput={(params) => (
+                      <TextField
+                       {...params}
+                       label={t("name_instruction")}
+                       inputProps={{ ...params.inputProps, name: "residentName" }}
+                       id="name"
+                       placeholder= {t("owner_name")}
+                       InputLabelProps={{ color: "secondary" }}
+                       fullWidth
+                     />
                   )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.id}>
-                      {option.label}
-                    </li>
+                   renderOption={(props, option) => (
+                      <li {...props} key={option.id}>
+                        {option.label}
+                      </li>
                   )}
-                  onInputChange={(event, value) => {
-                    setOpenName(value?.length > 0); // Set open to true when there's input
-                  }}
-                  onChange={(event, value) => {
-                    if (value) {
-                      setResidentName(value.inputValue ?? value.label);
-                    } else {
-                      setResidentName("");
-                    }
-
-                    // Keep both fields in sync
-                    if (!value) {
-                      setResident({
-                        user_id: "",
-                        firstname: "",
-                        lastname: "",
-                        residence_id: "",
-                        community_address: "",
-                        cellphone: "",
-                      });
-                      return;
-                    }
-                    const exists = residentName.find((resident) => resident.id === value.id);
-                    if (exists) {
-                      setResident({
-                        user_id: exists.id,
-                        firstname: exists.label.split(' ')[0],
-                        lastname: exists.label.split(' ')[1],
-                        residence_id: exists.residence_id,
-                        community_address: exists.address,
-                        cellphone: exists.cellphone,
-                      });
-                    } else {
-                      setTimeout(() => {
-                        setResident({
-                          user_id: value.inputValue ?? value.label,
-                          firstname: "",
-                          lastname: "",
-                          residence_id: "",
-                          community_address: "",
-                          cellphone: "",
-                        });
-                      });
-                    }
-                    setOpenName(false);
-                  }}
-                  filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
-                    return filtered;
-                  }}
-                />
-                <Autocomplete
-                  id="apartment"
-                  name="residentapartment"
-                  sx={{ mt: 2, width: 1 }}
-                  disablePortal
-                  freeSolo
-                  forcePopupIcon={false}
-                  noOptionsText={t("name_instruction")}
-                  value={resident_Address}
-                  open={openAddress}
-                  onClose={() => setOpenAddress(false)}
-                  options={residentName}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={t("owner_apartment")}
-                      inputProps={{ ...params.inputProps,name: "residentName" }}
-                      id="name"
-                      placeholder={t("apartment_instruction")}
-                      InputLabelProps={{ color: "secondary" }}
-                      fullWidth
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.id}>
-                      {option.address}
-                    </li>
-                  )}
-                  onInputChange={(event, value) => {
-                    setOpenAddress(value?.length > 0); // Set open to true when there's input
-                  }}
-                  onChange={(event, value) => {
-                    if (value) {
-                      setResidentAddress(value.inputValue ?? value.address);
-                    } else {
-                      setResidentAddress("");
-                    }
-
-                    // Keep both fields in sync
-                    if (!value) {
-                      setResident({
-                        user_id: "",
-                        firstname: "",
-                        lastname: "",
-                        residence_id: "",
-                        community_address: "",
-                        cellphone: "",
-                      });
-                      return;
-                    }
-                    const exists = residentName.find((resident) => resident.id === value.id);
-                    if (exists) {
-                      setResident({
-                        user_id: exists.id,
-                        firstname: exists.label.split(' ')[0],
-                        lastname: exists.label.split(' ')[1],
-                        residence_id: exists.residence_id,
-                        community_address: exists.address,
-                        cellphone: exists.cellphone,
-                      });
-                    } else {
-                      setTimeout(() => {
-                        setResident({
-                          user_id: value.inputValue ?? value.address,
-                          firstname: "",
-                          lastname: "",
-                          residence_id: "",
-                          community_address: "",
-                          cellphone: "",
-                        });
-                      });
-                    }
-                    setOpenAddress(false);
-                  }}
-                  filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
-                    return filtered;
-                  }}
+                   onInputChange={(event, value) => {
+                      setOpenAddress(value?.length > 0);
+                  
+                   }}
+                   onChange={handleNameChange}
+                   filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
+                      return filtered;
+                  
+                   }}
+                 />
+                 <Autocomplete
+                    id="apartment"
+                    name="residentapartment"
+                    sx={{ mt: 2, width: 1 }}
+                    disablePortal
+                    freeSolo
+                    forcePopupIcon={false}
+                    noOptionsText="No options"
+                    value={residentAddress}
+                    open={openAddress}
+                    onClose={() => setOpenAddress(false)}
+                    options={residentName}
+                    renderInput={(params) => (
+                       <TextField
+                        {...params}
+                        label={t("apartment_instruction")}
+                        inputProps={{ ...params.inputProps, name: "residentApartment" }}
+                        id="apartment"
+                        placeholder= {t("owner_apartment")}
+                        InputLabelProps={{ color: "secondary" }}
+                        fullWidth
+                      />
+            
+                    )}
+                    renderOption={() => null}
+                    onInputChange={(event, value) => {
+                       setOpenAddress(value?.length > 0);
+            
+                    }}
+                    onChange={(event, value) => {
+                       if (value) {
+                         setResidentAddress(value.inputValue ?? value.address);
+            
+                      } else {
+                         setResidentAddress("");
+            
+                      }
+                      setOpenAddress(false);
+                    }}
+                    filterOptions={(options, params) => {
+                       const filtered = filter(options, params);
+                      return filtered;
+            
+                    }}
                 />
                 <Button 
                    type = "submit"
