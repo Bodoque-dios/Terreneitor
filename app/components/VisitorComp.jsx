@@ -346,7 +346,7 @@ export const VisitorComp = ({
 									</Grid>
 
 									<Grid xs={12} md={6}>
-										<TextField fullWidth>wea</TextField>
+										<TextField label={t("resident_name")} fullWidth></TextField>
 									</Grid>
 									<Grid xs={12}>
 										<Accordion
