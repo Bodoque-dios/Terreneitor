@@ -46,7 +46,10 @@ export const ParkingComp = ({
 	frequentVisitors,
 	availableParkingSpaces,
 }) => {
-	const { t } = useTranslation("common", { keyPrefix: "visitors" });
+    const { t } = useTranslation("common", {
+		keyPrefix: "new_visitor_parking",
+	});
+
 	//Autocomplete values
 	const [rut, setRut] = useState("");
 	const [name, setName] = useState("");
@@ -131,7 +134,7 @@ export const ParkingComp = ({
 		<>
 			<Grid xs={12}>
 				<Typography variant="h3" color="primary" align="center">
-					Ingreso al Estacionamiento
+                    {t("title")}
 				</Typography>
 				{errorMessageVehicle && (
 					<Alert severity="error">{errorMessageVehicle}</Alert>
@@ -354,7 +357,7 @@ export const ParkingComp = ({
 									</Grid>
 
 									<Grid xs={12} md={6}>
-										<TextField fullWidth>wea</TextField>
+										<TextField fullWidth></TextField>
 									</Grid>
 									<Grid xs={12}>
 									{availableParkingSpaces.length === 0 ? (
@@ -471,7 +474,7 @@ export const ParkingComp = ({
       <TextField
 		id="departure_date"
 		name="departure_date"
-        label="Select Date"
+        label={t("select_date")}
         type="date"
         onChange={handleDateChange}
         InputLabelProps={{
@@ -481,7 +484,7 @@ export const ParkingComp = ({
 	   <TextField
 	    id="departure_time"
 		name="departure_time"
-        label="Select Time"
+        label={t("select_time")}
         type="time"
         onChange={handleTimeChange}
         InputLabelProps={{

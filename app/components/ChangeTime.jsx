@@ -10,7 +10,8 @@ import { styled } from '@mui/material/styles';
 import { useState } from "react";
 import { updateTime } from '@/app/lib/actions';
 import { useFormState } from "react-dom";
-
+import { useTranslation } from "react-i18next";
+ 
 const PopoverContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   width: '20rem',
@@ -28,6 +29,13 @@ const ButtonContainer = styled('div')({
 });
 
 export default function SpotConfigPopover({data}) {
+
+
+  const { t } = useTranslation("common", {
+		keyPrefix: "parking_configuration_view",
+	});
+
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [errorMessageVisit, dispatchUpdate] = useFormState(updateTime, undefined);
@@ -97,9 +105,9 @@ export default function SpotConfigPopover({data}) {
         <form onSubmit={handleSave}>
           
             <Grid item xs={12} style={{ marginBottom: '20px' }}>
-              <Typography variant="h6">Configuración</Typography>
+              <Typography variant="h6">{t("title")}</Typography>
               <Typography variant="body2" color="textSecondary">
-                Ingrese cuanto tiempo más se quedará el vehículo en el estacionamiento
+                {t("description")}
               </Typography>
             </Grid>
 
@@ -130,10 +138,10 @@ export default function SpotConfigPopover({data}) {
             <Grid item xs={12}>
               <ButtonContainer>
                 <Button variant="outlined" size="small" onClick={handleClose}>
-                  Cancelar
+                  {t("cancel")}
                 </Button>
                 <Button variant="contained" size="small" color="primary" type="submit">
-                  Actualizar
+                  {t("update")}
                 </Button>
               </ButtonContainer>
             </Grid>

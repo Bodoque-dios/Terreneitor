@@ -12,13 +12,20 @@ import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import { setVisitToResidenceNull } from '@/app/lib/actions';
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 function NOW() {
 	return new Date();
   }
 
 const ParkingManagement = ({ parking_state, parking_DB }) => {
-  const [parkingSpaces, setParkingSpaces] = useState(
+
+
+	const { t } = useTranslation("common", {
+		keyPrefix: "parking_view",
+	});
+
+  	const [parkingSpaces, setParkingSpaces] = useState(
 
     Object.entries(parking_DB).map(([id, parking]) => {
       if ( parking.salida < NOW()){
@@ -110,7 +117,7 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 	return (
 		<div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
 			<Typography variant="h4" component="h1" gutterBottom>
-				Administración de Estacionamientos
+				{t("title")}
 			</Typography>
 
 			<div className="flex items-center justify-between mb-4">
@@ -120,30 +127,31 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 						variant={filterStatus === "all" ? "contained" : "outlined"}
 						onClick={() => handleFilterStatus("all")}
 					>
-						Todos
+						{t("view_all")}
 					</Button>
 					<Button
 						variant={filterStatus === "available" ? "contained" : "outlined"}
 						onClick={() => handleFilterStatus("available")}
 					>
-						Disponible
+						{t("view_available")}
+
 					</Button>
 					<Button
 						variant={filterStatus === "occupied" ? "contained" : "outlined"}
 						onClick={() => handleFilterStatus("occupied")}
 					>
-						Ocupado
+						{t("view_occupied")}
 					</Button>
 				</div>
 				<div className="flex items-center gap-2">
 					<Typography variant="body2" color="textSecondary">
-						Ordenar por:
+						{t("sort")}
 					</Typography>
 					<Button
 						variant={sortBy === "number" ? "contained" : "outlined"}
 						onClick={() => handleSort("number")}
 					>
-						Numero{" "}
+						{t("sort_1")}{" "}
 						{sortBy === "number" &&
 							(sortDirection === "asc" ? "\u2191" : "\u2193")}
 					</Button>
@@ -151,7 +159,7 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 						variant={sortBy === "status" ? "contained" : "outlined"}
 						onClick={() => handleSort("status")}
 					>
-						Estado{" "}
+						{t("sort_2")}{" "}
 						{sortBy === "status" &&
 							(sortDirection === "asc" ? "\u2191" : "\u2193")}
 					</Button>
@@ -161,19 +169,19 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 				<div className="flex items-center gap-2">
 					<div className="w-4 h-4 rounded-full bg-green-500" />
 					<span className="text-gray-500 dark:text-gray-400">
-						Disponible: {parking_state.available_spaces}
+						{t("available_parking")} {parking_state.available_spaces}
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div className="w-4 h-4 rounded-full bg-red-500" />
 					<span className="text-gray-500 dark:text-gray-400">
-						Ocupado: {parking_state.ocupied_spaces}
+						{t("occupied_parking")} {parking_state.ocupied_spaces}
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div className="w-4 h-4 rounded-full bg-gray-500" />
 					<span className="text-gray-500 dark:text-gray-400">
-						Total: {parking_state.total_spaces}
+						{t("all_parking")} {parking_state.total_spaces}
 					</span>
 				</div>
 			</div>
@@ -182,12 +190,12 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>Numero</TableCell>
-							<TableCell>Visitante</TableCell>
-							<TableCell>Auto</TableCell>
-							<TableCell>Estado</TableCell>
-							<TableCell>Salida</TableCell>
-							<TableCell>Acción</TableCell>
+							<TableCell>{t("number_column")}</TableCell>
+							<TableCell>{t("visitor_column")}</TableCell>
+							<TableCell>{t("car_column")}</TableCell>
+							<TableCell>{t("state_column")}</TableCell>
+							<TableCell>{t("departure_column")}</TableCell>
+							<TableCell>{t("action_column")}</TableCell>
 							<TableCell></TableCell>
 						</TableRow>
 					</TableHead>
@@ -224,7 +232,7 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 										size="small"
 										onClick={handlePopClick_new_vehicle}
 										>
-										Marcar como Ocupado
+										{t("action_reserve")}
 										</Button>
 
 
@@ -244,14 +252,14 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 										<Grid>
 											<ButtonContainer >
 												<Button variant="outlined" size="small" onClick={handlePopClose_new_vehicle} >
-													Cancelar
+													{t("action_reserve_cancel")}
 												</Button>
 												<Link
 												href="/parking/new-parking-visitor"
 												style={{ textDecoration: "none" }}
 												>
 													<Button variant="contained" size="small" color="primary" onClick={handlePopClose_new_vehicle}>
-														Agregar Visita
+														{t("action_reserve_add")}
 													</Button>
 												</Link>
 											
@@ -276,7 +284,7 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 									size="small"
 									onClick={handlePopClick}
 									>
-										Marcar como Disponible
+										{t("action_remove")}
 									</Button>
 
 									<Popover
@@ -294,14 +302,14 @@ const ParkingManagement = ({ parking_state, parking_DB }) => {
 										<Grid>
 											<ButtonContainer>
 												<Button variant="outlined" size="small" onClick={handlePopClose}>
-													Cancelar
+													{t("action_remove_cancel")}
 												</Button>
 
 												<Button variant="contained" size="small" color="primary" onClick={() => { setVisitToResidenceNull(space.visitor_id,space.id); handlePopClose; handleUpdateParking;
 												window.location.reload(); // Esto recargará la págin
 													
 												 }}>
-													Liberar Espacio 
+													{t("action_remove_action")}
 												</Button>
 											</ButtonContainer>
 										</Grid>
